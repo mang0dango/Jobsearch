@@ -35,15 +35,15 @@ SKILL_KEYWORDS = [
 
 # Any jobs with these words in the title or description will be filtered out.
 BLACKLIST_KEYWORDS = [
-    "intern", "internship", "co-op", "coop", "co op",
+    "internship", "internship", "co-op", "coop", "co op",
     "senior", "sr.", "sr", "lead engineer", "lead developer",
     "staff engineer", "principal engineer", "founding engineer",
     "director", "vp ", "manager", "tech lead",
     "5+ years", "6+ years", "7+ years", "8+ years",
     "frontend", "ios developer", "hardware developer",
     "ruby on rails", ".net developer", "php developer", 
-    "web design", "analytics", "data scientist", "web development",
-    "front-end", "project management", "game", "hardware engineer",
+    "web design", "data scientist", "web development",
+    "front-end", "project management", "hardware engineer",
     "data entry",
 ]
 
