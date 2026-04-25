@@ -1,52 +1,41 @@
-status,reason,skills_matched,company,url,location,skills_list
-rejected,blacklist: game,3,position?gh_jid=7712261003&gh_src=my.greenhouse.search,http://prizepicks.com/position?gh_jid=7712261003&gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,7,greynoiseintelligence,https://boards.greenhouse.io/greynoiseintelligence/jobs/4677135005?gh_jid=4677135005&gh_src=my.greenhouse.search,AL,
-rejected,only 1 skills matched,1,careers-list?gh_jid=5978738004&gh_src=my.greenhouse.search,https://etechgroup.com/careers-list?gh_jid=5978738004&gh_src=my.greenhouse.search,CO,
-rejected,only 1 skills matched,1,careers-list?gh_jid=5978753004&gh_src=my.greenhouse.search,https://etechgroup.com/careers-list?gh_jid=5978753004&gh_src=my.greenhouse.search,CO,
-rejected,blacklist: senior,13,anteriad,https://job-boards.greenhouse.io/anteriad/jobs/5980230004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,19,ascenttechnologies,https://job-boards.greenhouse.io/ascenttechnologies/jobs/7660711003?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,20,axle,https://job-boards.greenhouse.io/axle/jobs/5114627007?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,18,capstoneintegratedsolutions,https://job-boards.greenhouse.io/capstoneintegratedsolutions/jobs/5117119007?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,29,cavnue,https://job-boards.greenhouse.io/cavnue/jobs/5840927004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,15,censys,https://job-boards.greenhouse.io/censys/jobs/8234120002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,13,censys,https://job-boards.greenhouse.io/censys/jobs/8499183002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 8+ years,17,climatefirstbank,https://job-boards.greenhouse.io/climatefirstbank/jobs/4229856009?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,15,dataiku,https://job-boards.greenhouse.io/dataiku/jobs/5973407004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,23,defenseunicorns,https://job-boards.greenhouse.io/defenseunicorns/jobs/5107178007?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,18,dept,https://job-boards.greenhouse.io/dept/jobs/7843127?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,9,digible,https://job-boards.greenhouse.io/digible/jobs/5977315004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 7+ years,18,duettoresearch,https://job-boards.greenhouse.io/duettoresearch/jobs/7831446?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,futurhealth,https://job-boards.greenhouse.io/futurhealth/jobs/5142175008?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,23,globalhealthcareexchangeinc,https://job-boards.greenhouse.io/globalhealthcareexchangeinc/jobs/4670201005?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,13,impiricus,https://job-boards.greenhouse.io/impiricus/jobs/5195577008?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,24,impiricus,https://job-boards.greenhouse.io/impiricus/jobs/5199972008?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: director,18,industrialelectricmanufacturing,https://job-boards.greenhouse.io/industrialelectricmanufacturing/jobs/4222442009?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,iterable,https://job-boards.greenhouse.io/iterable/jobs/7792868?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,13,kapitus,https://job-boards.greenhouse.io/kapitus/jobs/4231980009?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,19,maymobility,https://job-boards.greenhouse.io/maymobility/jobs/8376451002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,networkoptix,https://job-boards.greenhouse.io/networkoptix/jobs/5068088007?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,17,ocrolusinc,https://job-boards.greenhouse.io/ocrolusinc/jobs/5745522004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,14,officespacesoftware,https://job-boards.greenhouse.io/officespacesoftware/jobs/5175972008?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,7,oklo,https://job-boards.greenhouse.io/oklo/jobs/5972118004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,18,optimaldynamics,https://job-boards.greenhouse.io/optimaldynamics/jobs/5981628004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,rackner,https://job-boards.greenhouse.io/rackner/jobs/4669148005?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,20,recharge,https://job-boards.greenhouse.io/recharge/jobs/8510444002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,11,shopltk,https://job-boards.greenhouse.io/shopltk/jobs/7710389003?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: front-end,15,specterops,https://job-boards.greenhouse.io/specterops/jobs/8523491002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,10,speechify,https://job-boards.greenhouse.io/speechify/jobs/5974522004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,14,speechify,https://job-boards.greenhouse.io/speechify/jobs/5975188004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,15,speechify,https://job-boards.greenhouse.io/speechify/jobs/5975320004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,15,systemstechnologyresearch,https://job-boards.greenhouse.io/systemstechnologyresearch/jobs/4675444006?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,15,systemstechnologyresearch,https://job-boards.greenhouse.io/systemstechnologyresearch/jobs/4675482006?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,tekmetric,https://job-boards.greenhouse.io/tekmetric/jobs/5406072004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: 5+ years,21,torcrobotics,https://job-boards.greenhouse.io/torcrobotics/jobs/8467098002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,3,trivelta,https://job-boards.greenhouse.io/trivelta/jobs/4170679009?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,16,uniteus,https://job-boards.greenhouse.io/uniteus/jobs/8512194002?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,18,verse,https://job-boards.greenhouse.io/verse/jobs/5196721008?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,17,vynyl,https://job-boards.greenhouse.io/vynyl/jobs/5790706004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,17,vynyl,https://job-boards.greenhouse.io/vynyl/jobs/5790708004?gh_src=my.greenhouse.search,AL,
-rejected,blacklist: project management,2,job,https://www.fieldwire.com/job/8517598002?gh_jid=8517598002&gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,21,job,https://www.ithaka.org/job/4688693005?gh_jid=4688693005&gh_src=my.greenhouse.search,AL,
-rejected,only 1 skills matched,1,careers,https://www.suvoda.com/careers/job-openings?gh_jid=8459501002&gh_src=my.greenhouse.search,AL,
-rejected,only 1 skills matched,1,careers,https://www.suvoda.com/careers/job-openings?gh_jid=8495486002&gh_src=my.greenhouse.search,AL,
-rejected,blacklist: senior,6,careers?gh_jid=8520669002&gh_src=my.greenhouse.search,https://www.twochairs.com/careers?gh_jid=8520669002&gh_src=my.greenhouse.search,AL,
+status,company,url,skills_matched,skills_list,location,reason
+rejected,greynoiseintelligence,https://boards.greenhouse.io/greynoiseintelligence/jobs/4677135005?gh_jid=4677135005&gh_src=my.greenhouse.search,9,,AL,experience blacklist: senior
+rejected,careers-list?gh_jid=5978738004&gh_src=my.greenhouse.search,https://etechgroup.com/careers-list?gh_jid=5978738004&gh_src=my.greenhouse.search,1,,CO,only 1 skills matched
+rejected,careers-list?gh_jid=5978753004&gh_src=my.greenhouse.search,https://etechgroup.com/careers-list?gh_jid=5978753004&gh_src=my.greenhouse.search,1,,CO,only 1 skills matched
+rejected,ascenttechnologies,https://job-boards.greenhouse.io/ascenttechnologies/jobs/7660711003?gh_src=my.greenhouse.search,22,,AL,experience blacklist: lead python engineer
+rejected,axle,https://job-boards.greenhouse.io/axle/jobs/5114627007?gh_src=my.greenhouse.search,25,,AL,skill blacklist: project management
+rejected,capstoneintegratedsolutions,https://job-boards.greenhouse.io/capstoneintegratedsolutions/jobs/5117119007?gh_src=my.greenhouse.search,19,,AL,experience blacklist: senior
+rejected,cavnue,https://job-boards.greenhouse.io/cavnue/jobs/5840927004?gh_src=my.greenhouse.search,31,,AL,experience blacklist: senior
+rejected,censys,https://job-boards.greenhouse.io/censys/jobs/8234120002?gh_src=my.greenhouse.search,17,,AL,experience blacklist: senior
+rejected,dataiku,https://job-boards.greenhouse.io/dataiku/jobs/5973407004?gh_src=my.greenhouse.search,18,,AL,experience blacklist: senior
+rejected,defenseunicorns,https://job-boards.greenhouse.io/defenseunicorns/jobs/5107178007?gh_src=my.greenhouse.search,26,,AL,skill blacklist: active secret clearance
+rejected,digible,https://job-boards.greenhouse.io/digible/jobs/5977315004?gh_src=my.greenhouse.search,12,,AL,experience blacklist: senior
+rejected,futurhealth,https://job-boards.greenhouse.io/futurhealth/jobs/5142175008?gh_src=my.greenhouse.search,19,,AL,experience blacklist: senior
+rejected,globalhealthcareexchangeinc,https://job-boards.greenhouse.io/globalhealthcareexchangeinc/jobs/4670201005?gh_src=my.greenhouse.search,30,,AL,experience blacklist: senior
+rejected,industrialelectricmanufacturing,https://job-boards.greenhouse.io/industrialelectricmanufacturing/jobs/4222442009?gh_src=my.greenhouse.search,20,,AL,skill blacklist: project management
+rejected,iterable,https://job-boards.greenhouse.io/iterable/jobs/7792868?gh_src=my.greenhouse.search,19,,AL,experience blacklist: senior
+rejected,maymobility,https://job-boards.greenhouse.io/maymobility/jobs/8376451002?gh_src=my.greenhouse.search,23,,AL,experience blacklist: senior
+rejected,networkoptix,https://job-boards.greenhouse.io/networkoptix/jobs/5068088007?gh_src=my.greenhouse.search,18,,AL,experience blacklist: senior
+rejected,ocrolusinc,https://job-boards.greenhouse.io/ocrolusinc/jobs/5745522004?gh_src=my.greenhouse.search,20,,AL,experience blacklist: senior
+rejected,officespacesoftware,https://job-boards.greenhouse.io/officespacesoftware/jobs/5175972008?gh_src=my.greenhouse.search,16,,AL,experience blacklist: lead software engineer
+rejected,rackner,https://job-boards.greenhouse.io/rackner/jobs/4669148005?gh_src=my.greenhouse.search,18,,AL,experience blacklist: senior
+rejected,recharge,https://job-boards.greenhouse.io/recharge/jobs/8510444002?gh_src=my.greenhouse.search,22,,AL,experience blacklist: senior
+rejected,shopltk,https://job-boards.greenhouse.io/shopltk/jobs/7710389003?gh_src=my.greenhouse.search,11,,AL,experience blacklist: senior
+rejected,specterops,https://job-boards.greenhouse.io/specterops/jobs/8523491002?gh_src=my.greenhouse.search,16,,AL,skill blacklist: front-end
+rejected,speechify,https://job-boards.greenhouse.io/speechify/jobs/5974522004?gh_src=my.greenhouse.search,10,,AL,experience blacklist: senior
+rejected,speechify,https://job-boards.greenhouse.io/speechify/jobs/5975188004?gh_src=my.greenhouse.search,15,,AL,skill blacklist: frontend
+rejected,speechify,https://job-boards.greenhouse.io/speechify/jobs/5975320004?gh_src=my.greenhouse.search,16,,AL,skill blacklist: frontend
+rejected,systemstechnologyresearch,https://job-boards.greenhouse.io/systemstechnologyresearch/jobs/4675444006?gh_src=my.greenhouse.search,16,,AL,experience blacklist: senior
+rejected,systemstechnologyresearch,https://job-boards.greenhouse.io/systemstechnologyresearch/jobs/4675482006?gh_src=my.greenhouse.search,16,,AL,experience blacklist: lead software engineer
+rejected,tekmetric,https://job-boards.greenhouse.io/tekmetric/jobs/5406072004?gh_src=my.greenhouse.search,17,,AL,experience blacklist: senior
+rejected,torcrobotics,https://job-boards.greenhouse.io/torcrobotics/jobs/8467098002?gh_src=my.greenhouse.search,22,,AL,experience blacklist: senior
+rejected,trivelta,https://job-boards.greenhouse.io/trivelta/jobs/4170678009?gh_src=my.greenhouse.search,12,,AL,experience blacklist: lead software engineer
+rejected,trivelta,https://job-boards.greenhouse.io/trivelta/jobs/4170679009?gh_src=my.greenhouse.search,3,,AL,experience blacklist: senior
+rejected,uniteus,https://job-boards.greenhouse.io/uniteus/jobs/8512194002?gh_src=my.greenhouse.search,18,,AL,experience blacklist: senior
+rejected,vynyl,https://job-boards.greenhouse.io/vynyl/jobs/5790706004?gh_src=my.greenhouse.search,19,,AL,experience blacklist: senior
+rejected,vynyl,https://job-boards.greenhouse.io/vynyl/jobs/5790708004?gh_src=my.greenhouse.search,19,,AL,experience blacklist: senior
+rejected,job,https://www.fieldwire.com/job/8517598002?gh_jid=8517598002&gh_src=my.greenhouse.search,3,,AL,skill blacklist: project management
+rejected,job,https://www.ithaka.org/job/4688693005?gh_jid=4688693005&gh_src=my.greenhouse.search,24,,AL,experience blacklist: senior
+rejected,careers,https://www.suvoda.com/careers/job-openings?gh_jid=8459501002&gh_src=my.greenhouse.search,1,,AL,only 1 skills matched
+rejected,careers,https://www.suvoda.com/careers/job-openings?gh_jid=8495486002&gh_src=my.greenhouse.search,1,,AL,only 1 skills matched
+rejected,careers?gh_jid=8520669002&gh_src=my.greenhouse.search,https://www.twochairs.com/careers?gh_jid=8520669002&gh_src=my.greenhouse.search,6,,AL,experience blacklist: manager

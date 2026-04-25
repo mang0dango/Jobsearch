@@ -30,21 +30,42 @@ SKILL_KEYWORDS = [
     "pipelines", "ci/cd", "github", "gitlab", "automate", "automation",
     "unix administration", "continuous delivery", "cloud computing", 
     "test", "pytest", "data structures", "json", "devops", "lambda",
-    "gcp"
+    "gcp", "documentation", "best practice", "security groups", "iam",
+    "permissions", "container", "networking", "git", "django", "llm",
+    "kotlin", "java", "android",  
 ]
 
-# Any jobs with these words in the title or description will be filtered out.
-BLACKLIST_KEYWORDS = [
-    "internship", "internship", "co-op", "coop", "co op",
-    "senior", "sr.", "sr", "lead engineer", "lead developer",
-    "staff engineer", "principal engineer", "founding engineer",
-    "director", "vp ", "manager", "tech lead",
-    "5+ years", "6+ years", "7+ years", "8+ years",
+# Automatically filter out jobs with these job experience markers.
+BLACKLIST_EXPERIENCE_KEYWORDS = [
+    "senior", "internship", "internship", "co-op", "coop", "co op", 
+    "lead software engineer", "senior software engineer",
+    "sr.", "sr", "lead engineer", "lead developer",
+    "senior full stack engineer", "staff engineer",
+    "principal engineer", "principal software engineer",
+    "founding engineer", "director", "vp ", "manager",
+    "tech lead", "5+ years", "6+ years", "7+ years", "8+ years",
+    "lead python engineer", 
+]
+
+# Automatically filter out jobs with this skill or niche listed.
+BLACKLIST_SKILL_KEYWORDS = [
     "frontend", "ios developer", "hardware developer",
-    "ruby on rails", ".net developer", "php developer", 
+    ".net developer", "php developer", 
     "web design", "data scientist", "web development",
     "front-end", "project management", "hardware engineer",
-    "data entry",
+    "data entry","active secret clearance",
+    "government clearance required", "secret clearance required",
+]
+
+# Blacklist experience keywords are double checked against this list for context..
+COLLABORATIVE_KEYWORDS = [
+    "work with", "collaborate with", "mentor", "onboard", "help", 
+    "coordinate with", "learn from", "work alongside", "report to", 
+    "interact with", "engage with", "communicate", "consult with", 
+    "mentored", "learn from", "contribute to", "participate in",
+    "work closely with", "assist", "collaboration", "founded by",
+    "team", "leadership", "establish", "decision" ," decisions",
+    "design", "development", "develop", "practices", "work alongside",
 ]
 
 US_STATES = [
