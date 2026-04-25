@@ -66,26 +66,12 @@ def skill_score(text):
     return len(matches), matches
 
 
-def is_us(text):
-    """ Determine if job is likely US-based. """
-
-    return any(state.lower() in text for state in config.US_STATES)
-
 
 def get_company(url):
     """ Extract company name from Greenhouse job URL. """
 
     parts = url.split("/")
     return parts[3] if len(parts) > 3 else "unknown"
-
-
-def get_location(text):
-    """ Extract US state from job text if present. """
-
-    for state in config.US_STATES:
-        if state.lower() in text:
-            return state
-    return "unknown"
 
 
 def load_jobs(path):
@@ -123,18 +109,7 @@ def classify(url):
     combined = f"{title} {text}"
 
     company = get_company(url)
-    location = get_location(combined)
     score, skills = skill_score(combined)
-
-    if not is_us(combined):
-        return {
-            "status":"rejected",
-            "company": company,
-            "url": url,
-            "reason": "non-us location",
-            "skills_matched": score,
-            "location": location,
-        }
 
     bad_exp = has_experience_blacklist(combined)
     if bad_exp:
@@ -144,7 +119,6 @@ def classify(url):
             "url": url,
             "reason": f"experience blacklist: {bad_exp}",
             "skills_matched": score,
-            "location": location,
         }
 
     bad_skill = has_skill_blacklist(combined)
@@ -155,7 +129,6 @@ def classify(url):
             "url": url, 
             "reason": f"skill blacklist: {bad_skill}",
             "skills_matched": score,
-            "location": location,
         }
 
     if score >= config.MIN_NUMBER_OF_SKILLS_MATCHED:
@@ -165,7 +138,6 @@ def classify(url):
             "url": url,
             "skills_matched": score,
             "skills_list": ",".join(skills),
-            "location": location,
         }
 
     return {
@@ -174,12 +146,11 @@ def classify(url):
         "url": url,
         "reason": f"only {score} skills matched",
         "skills_matched": score,
-        "location": location,
     }
 
 
 def filter_jobs():
-    """ Check if job has any blacklisted terms, confirm the location, and see if the skills match. """
+    """ Check if job has any blacklisted terms and see if the skills match. """
 
     approved_count = 0
     rejected_count = 0
