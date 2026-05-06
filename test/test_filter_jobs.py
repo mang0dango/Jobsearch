@@ -71,7 +71,7 @@ def test_get_company_valid_url():
     url = "https://boards.greenhouse.io/stripe/jobs/123"
     company = get_company(url)
 
-    assert company == "boards.greenhouse.io"
+    assert company == "stripe"
 
 
 def test_get_company_invalid_url():
