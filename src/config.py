@@ -37,14 +37,14 @@ SKILL_KEYWORDS = [
 
 # Automatically filter out jobs with these job experience markers.
 BLACKLIST_EXPERIENCE_KEYWORDS = [
-    "senior", "internship", "internship", "co-op", "coop", "co op", 
+    "senior", "internship", "architect", "software engineer iii",
     "lead software engineer", "senior software engineer",
     "sr.", "sr", "lead engineer", "lead developer",
     "senior full stack engineer", "staff engineer",
     "principal engineer", "principal software engineer",
-    "founding engineer", "director", "vp ", "manager",
-    "tech lead", "5+ years", "6+ years", "7+ years", "8+ years",
-    "lead python engineer", 
+    "founding engineer", "director", "vp", "manager",
+    "tech lead", "5+ years", "6+ years", "7+ years", "8+ years", "5-6 years"
+    "lead python engineer", "staff software engineer", "senior AI", "staff data engineer", "principal platform engineer", "senior software developer", "security engineer", "Principal AI", "senior developer", "principal solutions engineer"
 ]
 
 # Automatically filter out jobs with this skill or niche listed.

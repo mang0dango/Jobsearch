@@ -4,7 +4,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-import config
+from src import config
 
 
 def fetch_content(url):
