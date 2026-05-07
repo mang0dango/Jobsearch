@@ -106,6 +106,7 @@ def upload(path, rows):
 def classify(url):
     """ Classify a job as approved or rejected with metadata. """
 
+    date = datetime.now().strftime("%d/%m/%Y")
     title, text = fetch_content(url)
     combined = f"{title} {text}"
 
@@ -115,38 +116,50 @@ def classify(url):
     bad_exp = has_experience_blacklist(combined)
     if bad_exp:
         return {
-            "status":"rejected",
+            "date_found": date,
+            "application_status": "",
+            "date_applied": "",
             "company": company,
             "url": url,
             "reason": f"experience blacklist: {bad_exp}",
             "skills_matched": score,
+            "status": "rejected",
         }
 
     bad_skill = has_skill_blacklist(combined)
     if bad_skill:
         return {
-            "status": "rejected",
+            "date_found": date,
+            "application_status": "",
+            "date_applied": "",
             "company": company,
             "url": url, 
             "reason": f"skill blacklist: {bad_skill}",
             "skills_matched": score,
+            "status": "rejected",
         }
 
     if score >= config.MIN_NUMBER_OF_SKILLS_MATCHED:
         return {
-            "status": "approved",
+            "date_found": date,
+            "application_status": "",
+            "date_applied": "",
             "company": company,
             "url": url,
             "skills_matched": score,
             "skills_list": ",".join(skills),
+            "status": "approved",
         }
 
     return {
-        "status": "rejected",
+        "date_found": date,
+        "application_status": "",
+        "date_applied": "",
         "company": company,
         "url": url,
         "reason": f"only {score} skills matched",
         "skills_matched": score,
+        "status": "rejected",
     }
 
 
