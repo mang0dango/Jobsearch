@@ -1,5 +1,12 @@
 MIN_NUMBER_OF_SKILLS_MATCHED = 3 
 
+PAGES_TO_LOAD = []
+
+UNFILTERED_JOBS = "test/path1.py"
+PROCESSED_JOBS  = "test/path2.py"
+APPROVED_JOBS   = "test/path3.py"
+REJECTED_JOBS   = "test/path4.py"
+
 # Any jobs with a few of these skills listed will be seen as a good match.
 SKILL_KEYWORDS = [
     "python", "aws", "snowflake", "airflow", "sql", "database"

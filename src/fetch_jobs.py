@@ -12,11 +12,16 @@ from selenium.webdriver.common.by import By
 
 import config
 
-options = Options()
-options.debugger_address = "127.0.0.1:9222"
-service = Service("/usr/local/bin/chromedriver")
-driver = webdriver.Chrome(service=service, options=options)
+driver = None
 
+def create_driver():
+    """Create and return Selenium Chrome driver."""
+
+    options = Options()
+    options.debugger_address = "127.0.0.1:9222"
+    service = Service("/usr/local/bin/chromedriver")
+
+    return webdriver.Chrome(service=service, options=options)
 
 def load_greenhouse(query: str):
     """ Load the greenhouse.io search page. """
@@ -92,6 +97,9 @@ def save_all_jobs(all_jobs: set, file_path: str = config.UNFILTERED_JOBS):
 
 def main():
     """ Run full scraping pipeline across all queries and save once. """
+
+    global driver
+    driver = create_driver()
 
     all_jobs = set()
 
