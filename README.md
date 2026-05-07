@@ -4,10 +4,10 @@ Prerequisites & Setup:
 
 - Create a greenhouse.io account.
 - Create an autofill profile on greenhouse.
-- Install Selenium, Pandas, and Requests for Python.
+- Install all needed depedencies from pipfile.
 - Navigate to config.py to change the query parameters as needed to filter for your ideal job.
 - Install a Chrome Driver that matches your Chrome Version.
-- Run "bash run_\chrome_\Session.sh" in a separate terminal tab.
+- Navigate to src/ folder and run "bash ./start.sh" to start the script. 
 - A new chrome window should open. It should not be signed in any google accounts. Open greenhouse.io website and sign in with your account (only the first time). Leave this chrome instance running while using fetch_/jobs.py.
 - Then you can execute the python scripts in a separate terminal window to generate a list of jobs. 
 - Use the list of jobs to apply to under data/approved_/jobs.csv by opening the file in google sheets. 

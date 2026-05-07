@@ -1,11 +1,11 @@
 import pandas as pd
+from datetime import datetime
 import time
 import requests
 import re
 from bs4 import BeautifulSoup
 
 import config
-
 
 def fetch_content(url):
     """ Fetch job title and full page text from job listing. """
@@ -22,7 +22,6 @@ def fetch_content(url):
         return title, text
     except Exception:
         return "", ""
-
 
 def has_experience_blacklist(text):
     """ Check experience blacklist with contextual override logic. """
@@ -46,7 +45,6 @@ def has_experience_blacklist(text):
 
     return None
 
-
 def has_skill_blacklist(text):
     """ Check if any skill blacklist keyword exists in job text. """
 
@@ -58,21 +56,17 @@ def has_skill_blacklist(text):
 
     return None
 
-
 def skill_score(text):
     """ Count how many skills match in job description. """
 
     matches = {s for s in config.SKILL_KEYWORDS if s in text}
     return len(matches), matches
 
-
-
 def get_company(url):
     """ Extract company name from Greenhouse job URL. """
 
     parts = url.split("/")
     return parts[3] if len(parts) > 3 else "unknown"
-
 
 def load_jobs(path):
     """ Load job URLs from CSV safely. """
@@ -81,7 +75,6 @@ def load_jobs(path):
         return pd.read_csv(path, header=None, names=["url"])
     except FileNotFoundError:
         return pd.DataFrame(columns=["url"])
-
 
 def upload(path, rows):
     """ Append processed rows into CSV output file. """
@@ -95,18 +88,21 @@ def upload(path, rows):
         existing = pd.read_csv(path)
         df = pd.concat([existing, df], ignore_index=True)
         df = df.drop_duplicates(subset=["url"])
+        
         if "skills_matched" in df.columns:
             df = df.sort_values(by="skills_matched", ascending=False)
+        if "date_found" in df.columns:
+            df = df.sort_values(by="date_found", ascending=False) 
+
     except FileNotFoundError:
         pass
 
     df.to_csv(path, index=False)
 
-
 def classify(url):
     """ Classify a job as approved or rejected with metadata. """
 
-    date = datetime.now().strftime("%d/%m/%Y")
+    date = datetime.now().strftime("%m/%d/%Y")
     title, text = fetch_content(url)
     combined = f"{title} {text}"
 
@@ -216,7 +212,6 @@ def filter_jobs():
             print("Update: All fetched jobs have already been processed.")
             quit()
 
-
 def main():
     """ Run full job filtering pipeline and upload results """
 
@@ -230,7 +225,6 @@ def main():
     upload(config.APPROVED_JOBS, approved.to_dict("records"))
     upload(config.REJECTED_JOBS, rejected.to_dict("records"))
     upload(config.PROCESSED_JOBS, processed_rows)
-
 
 if __name__ == "__main__":
     main()

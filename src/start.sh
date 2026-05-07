@@ -44,6 +44,6 @@ pipenv run python fetch_jobs.py
 
 pipenv run python filter_jobs.py
 
-kill $CHROME_PID 2>/dev/null || true
+fuser -k 9222/tcp 2>/dev/null || true
 
 echo "Done."
