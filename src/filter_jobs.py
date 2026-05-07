@@ -4,7 +4,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-from src import config
+import config
 
 
 def fetch_content(url):
@@ -95,7 +95,8 @@ def upload(path, rows):
         existing = pd.read_csv(path)
         df = pd.concat([existing, df], ignore_index=True)
         df = df.drop_duplicates(subset=["url"])
-        df = df.sort_values(by="skills_matched", ascending=False)
+        if "skills_matched" in df.columns:
+            df = df.sort_values(by="skills_matched", ascending=False)
     except FileNotFoundError:
         pass
 

@@ -23,6 +23,42 @@ def create_driver():
 
     return webdriver.Chrome(service=service, options=options)
 
+def ensure_greenhouse_logged_in():
+
+    driver.get("https://my.greenhouse.io/jobs")
+    time.sleep(2)
+
+    if "sign_in" in driver.current_url:
+
+        yes_values = {"y", "yes"}
+        no_values = {"n", "no"}
+
+        while True:
+            answer = input(
+                "❗ You are not logged in to Greenhouse.\n"
+                "Please navigate to greenhouse.io/log_in and enter your details in the new Chrome window.\n"
+                "Type Y/Yes when done, or N/No to exit: "
+            ).strip().lower()
+
+            if answer in yes_values:
+                driver.get("https://my.greenhouse.io/jobs")
+                time.sleep(2)
+
+                if "sign_in" not in driver.current_url:
+                    print("✔ Login confirmed")
+                    return
+                else:
+                    print("Still not logged in. Try again.")
+
+            elif answer in no_values:
+                print("Stopping pipeline.")
+                exit(1)
+
+            else:
+                print("Invalid input. Please type Y/Yes or N/No.")
+    else:
+        print("Update: Greenhouse user is signed in, the session can continue.")
+
 def load_greenhouse(query: str):
     """ Load the greenhouse.io search page. """
 
@@ -100,7 +136,7 @@ def main():
 
     global driver
     driver = create_driver()
-
+    ensure_greenhouse_logged_in()
     all_jobs = set()
 
     for query in config.GREENHOUSE_SEARCHES:

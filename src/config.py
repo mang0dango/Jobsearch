@@ -2,7 +2,7 @@
 
 MIN_NUMBER_OF_SKILLS_MATCHED = 3 
 REQUEST_DELAY                = 0.25
-PAGES_TO_LOAD                = 300
+PAGES_TO_LOAD                = 0
 
 # ─── FILE PATHS ──────────────────────────────────────────────────────────────
 
