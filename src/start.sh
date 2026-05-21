@@ -17,8 +17,9 @@ start_chrome() {
       --user-data-dir=/tmp/chrome-debug \
       --no-first-run \
       --no-default-browser-check \
-      --disable-extensions &
-
+      --disable-extensions \
+      >/dev/null 2>&1 &
+    
     CHROME_PID=$!
 
     echo "Waiting for Chrome to initialize..."
@@ -44,6 +45,6 @@ pipenv run python fetch_jobs.py
 
 pipenv run python filter_jobs.py
 
-fuser -k 9222/tcp 2>/dev/null || true
+fuser -k 9222/tcp >/dev/null 2>&1 || true
 
 echo "Done."

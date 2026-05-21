@@ -64,15 +64,20 @@ def load_greenhouse(query: str):
 
     driver.get(query)
     time.sleep(3)
-    print("Update: Greenhouse session loaded successfully")
+    print("Update: Loading new greenhouse search.")
 
 
 def load_more_jobs(total_page_expansions: int = config.PAGES_TO_LOAD):
     """ Expand job listings by clicking 'See more jobs'. """
 
     if total_page_expansions > 0:
+    
+        successful_clicks = 0
+
         try:
             for expansion_number in range(total_page_expansions):
+                breakpoint()
+                time.sleep(random.randint(1,5))
                 button = WebDriverWait(driver, 15).until(
                     EC.element_to_be_clickable(
                         (By.XPATH, "//button[.//span[text()='See more jobs']]")
@@ -80,27 +85,22 @@ def load_more_jobs(total_page_expansions: int = config.PAGES_TO_LOAD):
                 )
 
                 driver.execute_script("arguments[0].click();", button)
-                time.sleep(random.randint(1, 4))
+                successful_clicks += 1
 
                 print(
-                    f"\rUpdate: \"See more jobs\" clicked {expansion_number + 1} times.",
+                    f"\rUpdate: \"See more jobs\" button clicked {successful_clicks} times.",
                     end="",
                     flush=True
                 )
 
         except TimeoutException:
-            if driver.find_elements(By.XPATH, "//button[.//span[text()='See more jobs']]"):
-                print(f"Update: Loaded last page at {expansion_number + 1}.")
-            else:
-                print("Update: No more pages or button not clickable.")
+            print(f"Update: Loaded {successful_clicks + 1} pages.")
 
 
 def find_jobs() -> set:
     """ Scrape job links from current page. """
 
     new_job_links = set()
-
-    print("Update: Fetching job links now.")
 
     jobs = driver.find_elements(By.CSS_SELECTOR, '[data-provides="search-result"]')
 
@@ -118,7 +118,6 @@ def find_jobs() -> set:
         except Exception:
             continue
 
-    print(f"Update: Found {len(new_job_links)} jobs in this query.")
     return new_job_links
 
 
@@ -145,11 +144,10 @@ def main():
             load_greenhouse(query)
             load_more_jobs()
             
-            new_jobs = find_jobs()
-            print(f"Update: Found {len(new_jobs)} new jobs")
-            all_jobs.update(new_jobs)
-
-            print(f"Update: Total collected so far: {len(all_jobs)}")
+            page_jobs = find_jobs()
+            delta_jobs = page_jobs - all_jobs
+            all_jobs.update(delta_jobs)
+            print(f"Number of Jobs Found: {len(page_jobs)} | Unique Jobs Found: {len(delta_jobs)} | New Total: {len(all_jobs)}")
 
         except Exception as e:
             print(f"Error on query: {e}")
