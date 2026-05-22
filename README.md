@@ -1,20 +1,42 @@
-This project speeds up the job application process by helping users find more tailored jobs to their skillset and making applications easier with greenhouse autofill.
+This project makes applying to jobs fun. Scrape thousands of greenhouse job listings, filter out irrelevant roles, and find the highest skill-based matches. 
 
-Prerequisites & Setup:
+How to use this script?
 
-- Create a greenhouse.io account.
-- Create an autofill profile on greenhouse.
-- Install all needed depedencies from pipfile.
-- Navigate to config.py to change the query parameters as needed to filter for your ideal job.
-- Install a Chrome Driver that matches your Chrome Version.
-- Navigate to src/ folder and run "bash ./start.sh" to start the script. 
-- A new chrome window should open. It should not be signed in any google accounts. Open greenhouse.io website and sign in with your account (only the first time). Leave this chrome instance running while using fetch_/jobs.py.
-- Then you can execute the python scripts in a separate terminal window to generate a list of jobs. 
-- Use the list of jobs to apply to under data/approved_/jobs.csv by opening the file in google sheets. 
+- Navigate to greenhouse.io in the browser and create an account.
+- (Optional) Create an autofill applications profile on greenhouse.
+- Navigate to src/config.py to change the search parameters as needed to filter for your ideal job.
+- Run "./src/start.sh" to execute the script. 
+- A new chrome window should open. It should not be signed in to any google accounts or profiles.
+- Navigate to the greenhouse.io website and sign in with your account if prompted by the script. 
+- Open the "data/approved_/jobs.csv" with google sheets or a similar spreadsheet reader.
+- Mark jobs you applied to, date applied, and status updates on the spreadsheet. 
+- Once you are ready to search for more jobs, download the spreadsheet as csv again.
+- Replace the old "data/approved\_jobs.py" file with the new file to keep your notes in place.
+- Execute the "./src/start.sh" file again to rerun the script.
 
 How does this project work?
 
-Selenium opens a new browser session, you log in with your info (once, just the first time you use this script) and then it automates a job search on the greenhouse website, fetching all job links and going through as many pages of job listings as specified.
-Then the job listings are filtered out based on how well they match your skills and job search criteria. Specific words also automatically blacklisted from job listings. You can specify all this in the src/config.py. Once a list of good matches are made, basic information is extracted about each job listing and uploaded to a csv file. Then you can upload this file to google sheets and go through all the links manually, using the apply with greenhouse autofill option to quickly fill most of the answers and manually fill in any unusual or extra question fields. Now you applied to the most relevant roles and saved lots of time filling in the answers and deciding which jobs to apply to.
+The setup.sh file (called by startup.sh) installs all needed prerequisites for this script to run.
+The startup.sh file then starts a new browser session and starts the "fetch\_jobs.py" file.
+The "fetch\_jobs.py" file scrapes all the job listings with selenium from the links you provided and uploads them to "data/unfiltered\_jobs.csv"
+The "filter\_jobs.py" file then filters the job listings to remove irrelevant experience status jobs, jobs with blacklisted terms, and jobs with low skill-based matches.
+The results are then uploaded to "data/rejected\_jobs.csv", "data/approved\_jobs,csv", and "data/processed\_jobs.csv".
 
+Known Issues:
 
+- the tests need to be updated to match the new code changes.
+- the job links need to be normalized by removing redundant link metadata at the end to make the program more efficient and reduce chance of duplicates.
+- about 3% of job links fail to fetch a job description field, specifically when the link does not start with greenhouse.io, and is a dynamic page. An implimentation for react pages is on the way. 
+
+Future Developments:
+
+- creating better config options based on work experience level. 
+- adding data from more websites such as linkedin, indeed, etc.
+- creating an easier-to-use user interface with react.
+- adding an AI cover letter generator.
+- filtering jobs based on "easy apply" vs not.
+- adding ML to help with fine tuning the config options and improving match accuracy
+  (for now I'm keeping API's out of the project so it can continue being easier to setup and free).
+- using AI to fetch skills from the user's linkedin page and resume
+  (for now I'm keeping API's out of the project so it can continue being easier to setup and free).
+- maybe implimenting an automatic apply feature for the "easy apply" jobs with no long text questions.
