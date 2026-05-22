@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#google-chrome \
-#  --remote-debugging-port=9222 \
-#  --user-data-dir=/tmp/chrome-debug \
-#  --no-first-run \
-#  --no-default-browser-check \
-#  --disable-extensions
-
 start_chrome() {
     set -e
 
@@ -36,6 +29,8 @@ check_chrome_readiness() {
         exit 1
     fi
 }
+
+./setup.sh
 
 start_chrome
 
