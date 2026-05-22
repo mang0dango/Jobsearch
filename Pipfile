@@ -8,6 +8,7 @@ selenium = "*"
 pandas = "*"
 requests = "*"
 bs4 = "*"
+playwright = "*"
 
 [dev-packages]
 pytest = "*"

@@ -12,8 +12,6 @@ import config
 driver = None
 
 
-# ─── DRIVER SETUP ────────────────────────────────────────────────────────────
-
 def create_driver():
     """Create and return Selenium Chrome driver."""
 
@@ -23,9 +21,6 @@ def create_driver():
     service = Service("/usr/local/bin/chromedriver")
 
     return webdriver.Chrome(service=service, options=options)
-
-
-# ─── LOGIN CHECK ─────────────────────────────────────────────────────────────
 
 def ensure_greenhouse_logged_in():
     """Ensure user is logged into Greenhouse before scraping."""
@@ -68,8 +63,6 @@ def ensure_greenhouse_logged_in():
         print("Update: Greenhouse user is signed in.")
 
 
-# ─── LOAD SEARCH PAGE ────────────────────────────────────────────────────────
-
 def load_greenhouse(query: str):
     """Load a Greenhouse search page."""
 
@@ -80,8 +73,6 @@ def load_greenhouse(query: str):
     print("Update: Loading new greenhouse search.")
 
 
-# ─── SCROLL PAGE ─────────────────────────────────────────────────────────────
-
 def scroll_page():
     """Scroll to bottom of current page."""
 
@@ -91,8 +82,6 @@ def scroll_page():
 
     time.sleep(random.randint(2, 4))
 
-
-# ─── CLICK LOAD MORE BUTTON ──────────────────────────────────────────────────
 
 def click_load_more_button():
     """Click 'See more jobs' button if it exists."""
@@ -136,8 +125,6 @@ def click_load_more_button():
         return False
 
 
-# ─── COLLECT CURRENTLY RENDERED JOBS ────────────────────────────────────────
-
 def collect_visible_jobs() -> set:
     """Collect currently visible job links from DOM."""
 
@@ -167,100 +154,41 @@ def collect_visible_jobs() -> set:
 
     return collected_jobs
 
+def collect_jobs(max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY) -> set:
+""" This functon scrolls the job listings page to account for lazy page loading, collects rendered jobs, clicks load next page button when needed, and rate limits the amount of jobs scraped. """
 
-# ─── MAIN COLLECTION ENGINE ──────────────────────────────────────────────────
+    collected = set()
+    stagnant = 0
+    prev_size = 0
 
-def collect_jobs(
-    max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY
-) -> set:
-    """
-    Continuously:
-    - scroll page
-    - collect rendered jobs
-    - click load-more button when available
+    while len(collected) < max_jobs and stagnant < 3:
 
-    Stops when:
-    - enough jobs collected
-    - OR page stops changing
-    """
-
-    collected_jobs = set()
-
-    previous_job_count = 0
-    stagnant_rounds = 0
-
-    while len(collected_jobs) < max_jobs:
-
-        # Scroll page to trigger lazy rendering
         scroll_page()
-
-        # Collect newly rendered jobs
-        visible_jobs = collect_visible_jobs()
-
-        collected_jobs.update(visible_jobs)
-
-        print(
-            f"Update: {len(collected_jobs)} unique jobs collected."
-        )
-
-        # Stop immediately once limit reached
-        if len(collected_jobs) >= max_jobs:
-
-            print(
-                f"Update: Reached limit of {max_jobs} jobs."
-            )
-
-            break
-
-        # Attempt to click expansion button
         click_load_more_button()
 
-        # Detect if page stopped changing
-        current_job_count = len(collected_jobs)
+        collected.update(collect_visible_jobs())
 
-        if current_job_count == previous_job_count:
-            stagnant_rounds += 1
-        else:
-            stagnant_rounds = 0
+        new_size = len(collected)
 
-        previous_job_count = current_job_count
+        print(f"Collected: {new_size}")
 
-        # Stop after repeated stagnant rounds
-        if stagnant_rounds >= 3:
+        stagnant = stagnant + 1 if new_size == prev_size else 0
+        prev_size = new_size
 
-            print(
-                "Update: No additional jobs detected."
-            )
+    return set(list(collected)[:max_jobs])
 
-            break
-
-    return set(list(collected_jobs)[:max_jobs])
-
-
-# ─── SAVE FINAL JOB DATASET ──────────────────────────────────────────────────
-
-def save_all_jobs(
-    all_jobs: set,
-    file_path: str = config.UNFILTERED_JOBS
-):
+def save_all_jobs(all_jobs: set, file_path: str = config.UNFILTERED_JOBS):
     """Save all collected jobs to CSV."""
 
-    df = pd.DataFrame(
-        sorted(all_jobs),
-        columns=["url"]
-    )
+    df = pd.DataFrame(sorted(all_jobs),columns=["url"])
 
     df.to_csv(file_path, index=False)
 
-    print(
-        f"Update: Saved {len(df)} total unique job URLs."
-    )
+    print(f"Update: Saved {len(df)} total unique job URLs.")
 
-
-# ─── MAIN PIPELINE ───────────────────────────────────────────────────────────
 
 def main():
-    """Run full scraping pipeline."""
+    """Run the job scraping with selenium."""
 
     global driver
 
@@ -274,16 +202,12 @@ def main():
 
         try:
 
-            # Load search query
             load_greenhouse(query)
 
-            # Collect jobs for this query
             page_jobs = collect_jobs()
 
-            # Track unique additions
             new_jobs = page_jobs - all_jobs
 
-            # Merge into global dataset
             all_jobs.update(new_jobs)
 
             print(
