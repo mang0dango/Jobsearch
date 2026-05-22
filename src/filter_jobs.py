@@ -72,7 +72,7 @@ def load_jobs(path):
     """ Load job URLs from CSV safely. """
 
     try:
-        return pd.read_csv(path, header=None, names=["url"])
+        return pd.read_csv(path)
     except FileNotFoundError:
         return pd.DataFrame(columns=["url"])
 
