@@ -14,6 +14,8 @@ UNFILTERED_JOBS  = "../test/data/unfiltered_jobs.cvs"
 
 # ─── FILTERS ─────────────────────────────────────────────────────────────────
 
+GREENHOUSE_SEARCHES = ["fakelink1", "fakelink2", "fakelink3"]
+
 # Any jobs with a few of these skills listed will be seen as a good match.
 SKILL_KEYWORDS = [
     "python", "aws", "snowflake", "airflow", "sql", "database"

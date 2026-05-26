@@ -1,4 +1,5 @@
 import os
+import sys
 import random
 import time
 import pandas as pd
@@ -55,7 +56,7 @@ def ensure_greenhouse_logged_in():
 
             elif answer in no_values:
                 print("Stopping pipeline.")
-                exit(1)
+                sys.exit(1)
 
             else:
                 print("Invalid input.")

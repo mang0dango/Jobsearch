@@ -15,11 +15,6 @@ from src.filter_jobs import (
 )
 
 
-# ---------------------------------------------------------------------------
-# fetch_content
-# ---------------------------------------------------------------------------
-
-
 @patch("src.filter_jobs.requests.get")
 def test_fetch_content_success(mock_get):
     """Should return normalized title and page text."""
@@ -52,11 +47,6 @@ def test_fetch_content_request_failure(mock_get):
     assert text == ""
 
 
-# ---------------------------------------------------------------------------
-# skill_score
-# ---------------------------------------------------------------------------
-
-
 @pytest.mark.parametrize(
     ("text", "expected_skills"),
     [
@@ -81,11 +71,6 @@ def test_skill_score(text, expected_skills):
     assert score == len(expected_skills)
 
 
-# ---------------------------------------------------------------------------
-# skill blacklist
-# ---------------------------------------------------------------------------
-
-
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
@@ -97,11 +82,6 @@ def test_skill_score(text, expected_skills):
 )
 def test_has_skill_blacklist(text, expected):
     assert has_skill_blacklist(text) == expected
-
-
-# ---------------------------------------------------------------------------
-# experience blacklist
-# ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -133,11 +113,6 @@ def test_has_experience_blacklist(text, expected):
     assert has_experience_blacklist(text) == expected
 
 
-# ---------------------------------------------------------------------------
-# get_company
-# ---------------------------------------------------------------------------
-
-
 @pytest.mark.parametrize(
     ("url", "expected"),
     [
@@ -163,11 +138,6 @@ def test_get_company(url, expected):
     assert get_company(url) == expected
 
 
-# ---------------------------------------------------------------------------
-# load_jobs
-# ---------------------------------------------------------------------------
-
-
 def test_load_jobs_success(tmp_path):
     path = tmp_path / "jobs.csv"
 
@@ -187,11 +157,6 @@ def test_load_jobs_missing_file(tmp_path):
 
     assert result.empty
     assert list(result.columns) == ["url"]
-
-
-# ---------------------------------------------------------------------------
-# upload
-# ---------------------------------------------------------------------------
 
 
 def test_upload_creates_file(tmp_path):
@@ -239,11 +204,6 @@ def test_upload_no_rows(tmp_path):
     upload(path, [])
 
     assert not path.exists()
-
-
-# ---------------------------------------------------------------------------
-# classify
-# ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -330,11 +290,6 @@ def test_classify_approved_contains_skills_list(mock_fetch):
     assert result["status"] == "approved"
     assert "skills_list" in result
     assert isinstance(result["skills_list"], str)
-
-
-# ---------------------------------------------------------------------------
-# filter_jobs
-# ---------------------------------------------------------------------------
 
 
 @patch("src.filter_jobs.time.sleep", return_value=None)
