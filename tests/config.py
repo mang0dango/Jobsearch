@@ -1,11 +1,18 @@
+# ─── GENERAL SETTINGS ─────────────────────────────────────────────────────────
+
 MIN_NUMBER_OF_SKILLS_MATCHED = 3 
+REQUEST_DELAY                = 0.25
+MAX_JOB_COUNT_PER_QUERY      = 25
 
-PAGES_TO_LOAD = []
+# ─── FILE PATHS ──────────────────────────────────────────────────────────────
 
-UNFILTERED_JOBS = "test/path1.py"
-PROCESSED_JOBS  = "test/path2.py"
-APPROVED_JOBS   = "test/path3.py"
-REJECTED_JOBS   = "test/path4.py"
+FETCHED_JOBS     = "../test/data/fetched_jobs.csv"
+PROCESSED_JOBS   = "../test/data/processed_jobs.csv" 
+APPROVED_JOBS    = "../test/data/approved_jobs.csv" 
+REJECTED_JOBS    = "../test/data/rejected_jobs.csv"
+UNFILTERED_JOBS  = "../test/data/unfiltered_jobs.cvs"
+
+# ─── FILTERS ─────────────────────────────────────────────────────────────────
 
 # Any jobs with a few of these skills listed will be seen as a good match.
 SKILL_KEYWORDS = [
@@ -28,7 +35,7 @@ SKILL_KEYWORDS = [
 
 # Automatically filter out jobs with these job experience markers.
 BLACKLIST_EXPERIENCE_KEYWORDS = [
-    "senior", "internship", "architect", "software engineer iii",
+    "senior", "architect", "software engineer iii",
     "lead software engineer", "senior software engineer",
     "sr.", "sr", "lead engineer", "lead developer",
     "senior full stack engineer", "staff engineer",
