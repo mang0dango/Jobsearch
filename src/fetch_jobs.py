@@ -1,3 +1,4 @@
+import os
 import random
 import time
 import pandas as pd
@@ -141,7 +142,7 @@ def collect_visible_jobs() -> set:
 
             btn = job.find_element(
                 By.CSS_SELECTOR,
-                "a.btn.btn--rounded[rel='noopener noreferrer']"
+                "a[href]"
             )
 
             link = btn.get_attribute("href")
@@ -150,7 +151,7 @@ def collect_visible_jobs() -> set:
                 collected_jobs.add(link)
 
         except Exception:
-            continue
+            pass
 
     return collected_jobs
 
@@ -167,11 +168,7 @@ def collect_jobs(max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY) -> set:
         click_load_more_button()
 
         collected.update(collect_visible_jobs())
-
         new_size = len(collected)
-
-        print(f"Collected: {new_size}")
-
         stagnant = stagnant + 1 if new_size == prev_size else 0
         prev_size = new_size
 
@@ -179,6 +176,9 @@ def collect_jobs(max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY) -> set:
 
 def save_all_jobs(all_jobs: set, file_path: str = config.FETCHED_JOBS):
     """Save all collected jobs to CSV."""
+    
+    directory = os.path.dirname(file_path)
+    os.makedirs(directory, exist_ok=True)
 
     df = pd.DataFrame(sorted(all_jobs),columns=["url"])
 
