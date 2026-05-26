@@ -2,19 +2,20 @@
 
 MIN_NUMBER_OF_SKILLS_MATCHED = 3 
 REQUEST_DELAY                = 0.25
-MAX_JOB_COUNT_PER_QUERY      = 50
+MAX_JOB_COUNT_PER_QUERY      = 10
 
 # ─── FILE PATHS ──────────────────────────────────────────────────────────────
 
-UNFILTERED_JOBS     = "../data/unfiltered_jobs.csv"
-PROCESSED_JOBS      = "../data/processed_jobs.csv"
-APPROVED_JOBS       = "../data/approved_jobs.csv"
-REJECTED_JOBS       = "../data/rejected_jobs.csv"
+FETCHED_JOBS     = "../data/fetched_jobs.csv"
+PROCESSED_JOBS   = "../data/processed_jobs.csv" 
+APPROVED_JOBS    = "../data/approved_jobs.csv" 
+REJECTED_JOBS    = "../data/rejected_jobs.csv"
+UNFILTERED_JOBS  = "../data/unfiltered_jobs.cvs"
 
 # ─── FILTERS ─────────────────────────────────────────────────────────────────
 
 # Go to the greenhouse website, search for the type of job you want and set filters such as remote, or the location you want. Copy and paste the links here. 
-GREENHOUSE_SEARCHES = ("https://my.greenhouse.io/jobs?query=software%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=software%20developer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", 
+GREENHOUSE_SEARCHES = ("https://my.greenhouse.io/jobs?query=software%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=software%20developer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote") 
 
 """https://my.greenhouse.io/jobs?query=data%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=AI%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=AI%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=python%20engineer&location=United%20States&lat=39.71614&lon=-96.999246&location_type=country&country_short_name=US&work_type[]=remote", "https://my.greenhouse.io/jobs?query=software%20engineer&location=Michigan%2C%20USA&lat=43.924812&lon=-84.633107&location_type=region&country_short_name=US&state_short_name=MI&work_type[]=remote"""
 

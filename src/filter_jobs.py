@@ -109,17 +109,16 @@ def classify(url):
     company = get_company(url)
     score, skills = skill_score(combined)
 
-    bad_exp = has_experience_blacklist(combined)
-    if bad_exp:
+    if "greenhouse.io" not in url:
         return {
             "date_found": date,
             "application_status": "",
             "date_applied": "",
             "company": company,
-            "url": url,
-            "reason": f"experience blacklist: {bad_exp}",
-            "skills_matched": score,
-            "status": "rejected",
+            "url": url, 
+            "reason": "not default greenhouse url",
+            "skills_matched": "",
+            "status": "unfiltered",
         }
 
     bad_skill = has_skill_blacklist(combined)
@@ -131,6 +130,19 @@ def classify(url):
             "company": company,
             "url": url, 
             "reason": f"skill blacklist: {bad_skill}",
+            "skills_matched": score,
+            "status": "rejected",
+        }
+
+    bad_exp = has_experience_blacklist(combined)
+    if bad_exp:
+        return {
+            "date_found": date,
+            "application_status": "",
+            "date_applied": "",
+            "company": company,
+            "url": url,
+            "reason": f"experience blacklist: {bad_exp}",
             "skills_matched": score,
             "status": "rejected",
         }
@@ -164,19 +176,21 @@ def filter_jobs():
 
     approved_count = 0
     rejected_count = 0
+    unfiltered_count = 0
     rows = []
     processed_rows = []
+    total = 0  
 
     try:
-        unfiltered = load_jobs(config.UNFILTERED_JOBS)
+        fetched_jobs = load_jobs(config.FETCHED_JOBS)
         processed = load_jobs(config.PROCESSED_JOBS)
         processed_set = set(processed["url"])
-        unfiltered = unfiltered[~unfiltered["url"].isin(processed_set)]
-        total = len(unfiltered)
+        jobs_to_process = fetched_jobs[~fetched_jobs["url"].isin(processed_set)]
+        total = len(jobs_to_process)
 
         print(f"Update: Starting processing {total} jobs")
 
-        for i, url in enumerate(unfiltered["url"], start=1):
+        for i, url in enumerate(jobs_to_process["url"], start=1):
             result = classify(url)
 
             rows.append(result)
@@ -184,14 +198,16 @@ def filter_jobs():
 
             if result["status"] == "approved":
                 approved_count += 1
-            else:
+            elif result["status"] == "rejected":
                 rejected_count += 1
+            elif result["status"] == "unfiltered":
+                unfiltered_count += 1
 
-            percent = (i / total) * 100
+            percent = (i / total) * 100 if total else 0
 
             print(
                 f"\rProcessed {i}/{total} ({percent:.2f}%) | "
-                f"Approved: {approved_count} | Rejected: {rejected_count}",
+                f"Approved: {approved_count} | Rejected: {rejected_count} | Unfiltered: {unfiltered_count}",
                 end="",
                 flush=True
             )
@@ -209,22 +225,23 @@ def filter_jobs():
             df = pd.DataFrame(rows)
             return df, processed_rows, total
         else:
-            print("Update: All fetched jobs have already been processed.")
-            quit()
+            print("Update: No jobs to process.")
+            return pd.DataFrame(), [], 0
 
 def main():
     """ Run full job filtering pipeline and upload results """
 
     df, processed_rows, total = filter_jobs()
 
-    approved = df[df["status"] == "approved"].copy()
-    rejected = df[df["status"] == "rejected"].copy()
-    approved = approved.sort_values(by="skills_matched", ascending=False)
+    unfiltered = df[df["status"] == "unfiltered"].copy().to_dict("records")
+    rejected = df[df["status"] == "rejected"].copy().to_dict("records")
+    approved = df[df["status"] == "approved"].copy().sort_values(by="skills_matched", ascending=False).to_dict("records")
 
     print("\nUpdate: Uploading results")
-    upload(config.APPROVED_JOBS, approved.to_dict("records"))
-    upload(config.REJECTED_JOBS, rejected.to_dict("records"))
+    upload(config.APPROVED_JOBS, approved)
+    upload(config.REJECTED_JOBS, rejected)
+    upload(config.UNFILTERED_JOBS, unfiltered)
     upload(config.PROCESSED_JOBS, processed_rows)
-
+    
 if __name__ == "__main__":
     main()

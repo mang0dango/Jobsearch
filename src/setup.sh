@@ -6,17 +6,8 @@ install_python_packages () {
 
     	echo "Installing Python dependencies..."
 
+	cd ../
 	pipenv sync
-
-    fi
-}
-
-install_playwright_chromium () {
-    if [ ! -d "$HOME/.cache/ms-playwright" ]; then
-
-        echo "Installing Playwright Chromium..."
-        
-	pipenv run playwright install chromium
 
     fi
 }
@@ -59,8 +50,6 @@ install_matching_chrome_driver() {
 }
 
 install_python_packages
-
-install_playwright_chromium
 
 install_chrome_for_selenium
 

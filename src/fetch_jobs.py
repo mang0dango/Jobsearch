@@ -155,7 +155,7 @@ def collect_visible_jobs() -> set:
     return collected_jobs
 
 def collect_jobs(max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY) -> set:
-""" This functon scrolls the job listings page to account for lazy page loading, collects rendered jobs, clicks load next page button when needed, and rate limits the amount of jobs scraped. """
+    """ This functon scrolls the job listings page to account for lazy page loading, collects rendered jobs, clicks load next page button when needed, and rate limits the amount of jobs scraped. """
 
     collected = set()
     stagnant = 0
@@ -177,7 +177,7 @@ def collect_jobs(max_jobs: int = config.MAX_JOB_COUNT_PER_QUERY) -> set:
 
     return set(list(collected)[:max_jobs])
 
-def save_all_jobs(all_jobs: set, file_path: str = config.UNFILTERED_JOBS):
+def save_all_jobs(all_jobs: set, file_path: str = config.FETCHED_JOBS):
     """Save all collected jobs to CSV."""
 
     df = pd.DataFrame(sorted(all_jobs),columns=["url"])
