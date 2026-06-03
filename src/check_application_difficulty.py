@@ -1,90 +1,104 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
-def check_application_difficulty(url):
-    """ Classify how hard the job application questions are or how long applying might take based on the number of questions. """
+from config import (
+    UNKNOWN_QUESTIONS,
+    REJECTED_JOBS,
+    BOILERPLATE_QUESTIONS,
+    EASY_KEY_PHRASES,
+    MEDIUM_KEY_PHRASES,
+    HARD_KEY_PHRASES,
+)
 
-    STANDARD_QUESTIONS = [
-        'first name', 'last name', 'preferred first name', 'email',
-        'phone', 'start date year', 'end date year', 'linkedin profile',
-        'website', 'country', 'school', 'degree', 'discipline', 'start date month',
-        'end date month', 'gender', 'are you hispanic/latino?', 'veteran status',
-        'disability status']
-    EASY_QUESTIONS = ['do you currently possess an active ts/sci clearance?'] 
-    MEDIUM_QUESTIONS = []
-    HARD_QUESTIONS = []
-    ALL_QUESTIONS =  STANDARD_QUESTIONS + EASY_QUESTIONS + MEDIUM_QUESTIONS + HARD_QUESTIONS
+ALL_KEY_PHRASES = EASY_KEY_PHRASES + MEDIUM_KEY_PHRASES + HARD_KEY_PHRASES
 
-    def fetch_questions(url):
-        """ Fetch all the job application questions. """
-
-        questions = []
-
-        try:
-
-            res = requests.get(url, timeout=10)
-            soup = BeautifulSoup(res.text, "html.parser")
-
-            print("trying to fetch questions")
-
-            text_q_wrappers = soup.find_all("div", class_="input-wrapper") 
-            dropdown_q_wrappers = soup.find_all("div", class_="select__container")
-            wrappers = text_q_wrappers + dropdown_q_wrappers
-
-            for wrapper in wrappers:
-                label = wrapper.find("label")
-
-                if label:
-                    question = label.get_text(strip=True).lower()
-                    if "*" in question: 
-                        questions.append(question.replace("*", ""))
-            
-            print(questions)
-            
-            return questions
-        except Exception as e:
-            print(e)
-            return []
-
-    def record_unknown(questions):
-        """ Write the questions which are not yet assigned a difficulty setting to a separate file so they can be added. """
-
-        unknown_questions = []
-
-        for q in questions:
-            if q not in ALL_QUESTIONS:
-                unknown_questions.append(q)
-
-        with open('../data/unknown_questions.csv', 'a', newline='') as file:
+def record(unknown_questions: list[str]):
+    """ Write the questions which the code could not understand in a separate file to help adjust the text analysis for the future. """
+    
+    if unknown_questions: 
+        with open(UNKNOWN_QUESTIONS, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(unknown_questions)
 
-    def evaluate(questions):
-        """ Assign a difficulty marker. """
+def fetch_questions(url: str) -> list[str]:
+    """ Fetch all the job application form questions. """
 
-        difficulty = "unknown"
+    questions = []
+
+    try:
+
+        res = requests.get(url, timeout=10)
+        soup = BeautifulSoup(res.text, "html.parser")
+
+        text_q_wrappers = soup.find_all("div", class_="input-wrapper") 
+        dropdown_q_wrappers = soup.find_all("div", class_="select__container")
+        wrappers = text_q_wrappers + dropdown_q_wrappers
+
+        for wrapper in wrappers:
+            label = wrapper.find("label")
+
+            if label:
+                question = label.get_text(strip=True)
+                if "*" in question: 
+                    normalized_q = question.lower().replace("*","")
+                    questions.append(normalized_q)
         
-        if questions:
-            if any(q not in ALL_QUESTIONS for q in questions):
-                record_unknown(questions)
-            elif any(q in HARD_QUESTIONS for q in questions):
-                difficulty = "hard"
-            elif any(q in MEDIUM_QUESTIONS for q in questions) or len(questions) > 20:
-                difficulty = "medium"
-            elif any(q in EASY_QUESTIONS for q in questions):
-                difficulty = "easy"
+        return questions
+    except Exception as e:
+        print(e)
+        return []
 
-        return difficulty
+def evaluate_difficulty(questions: list[str]) -> (str, list[str]):
+    """ Check if the job application form has any questions that are not boilerplate questions, such as name, etc.
+    If there are more complex customized questions, then evaluate complexity of the questions and overall form based on common key words that denote the nature of the question. 
+    For questions that the companies wrote themselves instead of boilerplate questions, the wording might change while referring to the same topic. """ 
 
-    questions = fetch_questions(url)
-    difficulty = evaluate(questions)
+    status = "unassigned"
+    unknown_questions = []    
+    custom_questions = [q for q in questions if q not in BOILERPLATE_QUESTIONS]
 
-    return difficulty
+    if custom_questions:
+        for q in custom_questions:
+            if not any(phrase in q for phrase in ALL_KEY_PHRASES):
+                status = "unknown"
+                unknown_questions.append(q)
+            elif any(phrase in q for phrase in HARD_KEY_PHRASES):
+                if status == "unassigned" or status == "easy" or status == "medium":
+                    status = "hard"
+                    print(f"Question marked as hard: {q}")
+            elif any(phrase in q for phrase in MEDIUM_KEY_PHRASES):
+                if status == "unassigned" or status == "easy":
+                    status = "medium"
+                    print(f"Question marked as medium: {q}")
+            elif any(phrase in q for phrase in EASY_KEY_PHRASES):
+                if status == "unassigned":
+                    status = "easy"
+    elif questions:
+        status = "boilerplate"
+
+    return status, unknown_questions
 
 def main():
-    url = "https://job-boards.greenhouse.io/kepora/jobs/4250590009?gh_src=my.greenhouse.search,,19,approved"
-    print(check_application_difficulty(url))
+    count = 0
+    df = pd.read_csv(REJECTED_JOBS)
+    urls = df["url"].values.tolist()
+    
+    breakpoint()
+    for url in urls:
+        count += 1
+        if count > 10:
+            print(f"\n\nEvaluating url: {url}")
+            questions = fetch_questions(url)
+            difficulty, unknown_q = evaluate_difficulty(questions)
+            print(f"\nQuestions: {questions}\n")
+            print(f"Difficulty: {difficulty}")
+            print(f"Unknown Questions: {unknown_q}")
+            #record(unknown_q)
+        if count > 20:
+            exit()
+
 
 if __name__ == "__main__":
     main()
