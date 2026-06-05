@@ -85,6 +85,6 @@ BOILERPLATE_QUESTIONS = [
 EASY_KEY_PHRASES = ["name", "full name", "refer", "referred", "hear about", "time", "country", "reside", "located", "address", "know", "family members", "related to", "related by", "relative", "employee", "employed", "have you", "right to work", "proof", "documented", "documentation", "conflict", "compete" ,"review and acknowledge", "disability", "gender", "racial", "ethnic", "veteran", "linkedin", "immigration", "authorized", "legal", "legally", "sponsorship", "location", "citizen", "greencard", "location", "city", "state", "states", "live in", "years of", "professional experience", "working experience", "degree", "graduate", "are you", "do you", "currently", "member", "privacy", "agreement", "statement", "would you", "how", "restoraunt", "pet", "hobby", "outside of work", "free time", "hobbies", "is it", "can you", "confirm"]
 MEDIUM_KEY_PHRASES = ["why", "favorite", "salary", "protocols", "rate", "which", "tools", "expectation", "compensation", "list", "rate", "indicate", "select", "what"]
 HARD_KEY_PHRASES = ["how would you", "join", "what would you do", "explain", "tell", "apply to", "references", "made you", "decide", "example", "examples", "result", "impact", "which", "used", "mission", "values", "describe", "in detail", "description"]
-
+ALL_KEY_PHRASES = BOILERPLATE_QUESTIONS + EASY_KEY_PHRASES + MEDIUM_KEY_PHRASES + HARD_KEY_PHRASES
 
 

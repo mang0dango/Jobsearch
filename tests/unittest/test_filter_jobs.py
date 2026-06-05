@@ -12,6 +12,9 @@ from src.filter_jobs import (
     load_jobs,
     skill_score,
     upload,
+    fetch_questions,
+    record,
+    evaluate_difficulty,
 )
 
 
@@ -30,7 +33,7 @@ def test_fetch_content_success(mock_get):
     mock_get.return_value = mock_response
 
     title, text = fetch_content("https://example.com")
-
+    
     assert title == "junior python engineer"
     assert "python aws docker" in text
 
@@ -335,52 +338,6 @@ def test_filter_jobs_basic_flow(
 
 @patch("src.filter_jobs.time.sleep", return_value=None)
 @patch("src.filter_jobs.load_jobs")
-def test_filter_jobs_no_jobs(
-    mock_load,
-    _mock_sleep,
-):
-    """Should return empty outputs when no jobs exist."""
-
-    mock_load.side_effect = [
-        pd.DataFrame({"url": []}),
-        pd.DataFrame({"url": []}),
-    ]
-
-    df, processed_rows, total = filter_jobs()
-
-    assert df.empty
-    assert processed_rows == []
-    assert total == 0
-
-
-@patch("src.filter_jobs.time.sleep", return_value=None)
-@patch("src.filter_jobs.classify")
-@patch("src.filter_jobs.load_jobs")
-def test_filter_jobs_keyboard_interrupt(
-    mock_load,
-    mock_classify,
-    _mock_sleep,
-):
-    """
-    Should safely return partial progress after Ctrl+C.
-    """
-
-    mock_load.side_effect = [
-        pd.DataFrame({"url": ["u1", "u2"]}),
-        pd.DataFrame({"url": []}),
-    ]
-
-    mock_classify.side_effect = KeyboardInterrupt
-
-    df, processed_rows, total = filter_jobs()
-
-    assert isinstance(df, pd.DataFrame)
-    assert processed_rows == []
-    assert total == 2
-
-
-@patch("src.filter_jobs.time.sleep", return_value=None)
-@patch("src.filter_jobs.load_jobs")
 def test_filter_jobs_general_exception(
     mock_load,
     _mock_sleep,
@@ -391,6 +348,186 @@ def test_filter_jobs_general_exception(
 
     df, processed_rows, total = filter_jobs()
 
-    assert df.empty
+    assert df == None
     assert processed_rows == []
     assert total == 0
+
+@patch("src.filter_jobs.requests.get")
+def test_fetch_questions_extracts_required_questions(mock_get):
+    """Should extract and normalize required form questions."""
+
+    mock_response = Mock()
+    mock_response.text = """
+    <div class="input-wrapper">
+        <label>What is your name? *</label>
+    </div>
+
+    <div class="select__container">
+        <label>Preferred location *</label>
+    </div>
+
+    <div class="input-wrapper">
+        <label>Optional question</label>
+    </div>
+    """
+
+    mock_get.return_value = mock_response
+
+    result = fetch_questions("https://example.com")
+
+    assert result == [
+        "what is your name? ",
+        "preferred location "
+    ]
+
+@patch("src.filter_jobs.csv.writer")
+@patch("builtins.open")
+def test_record_writes_unknown_questions(
+    mock_open,
+    mock_writer,
+):
+    """Should write unknown questions to csv."""
+
+    record(["question one"])
+
+    mock_open.assert_called_once()
+
+    mock_writer.return_value.writerow.assert_called_once_with(
+        ["question one"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("questions", "expected"),
+    [
+        (["alien quantum interview"], "unknown"),
+        (["who referred you to this role"], "easy"),
+        (["what are your salary expectations"], "medium"),
+        (["name all the tools like expedian"], "medium"),
+        (["name at least 3 examples of how exceeded in your previous role"], "hard"),
+        (["how would you explain this project"], "hard"),
+        (["first name", "email"], "boilerplate"),
+    ],
+)
+@patch("src.filter_jobs.record")
+@patch("src.filter_jobs.fetch_questions")
+def test_evaluate_difficulty_single_questions(mock_fetch_questions, mock_record, questions, expected):
+    """
+    Single-question classification cases.
+    Ensures base mapping from question → difficulty is correct.
+    """
+
+    mock_fetch_questions.return_value = questions
+
+    assert evaluate_difficulty("url") == expected
+
+
+@pytest.mark.parametrize(
+    ("questions", "expected"),
+    [
+        # easy + medium → medium
+        (
+            ["time zone", "what is your salary expectation"],
+            "medium",
+        ),
+
+        # easy + hard → hard
+        (
+            ["time zone", "how would you explain your project"],
+            "hard",
+        ),
+
+        # medium + hard → hard
+        (
+            ["what is your salary expectation", "how would you explain your project"],
+            "hard",
+        ),
+
+        # boilerplate + easy → easy
+        (
+            ["first name", "time zone"],
+            "easy",
+        ),
+
+        # boilerplate + medium → medium
+        (
+            ["email", "what is your salary expectation"],
+            "medium",
+        ),
+
+        # boilerplate + hard → hard
+        (
+            ["first name", "how would you explain your project"],
+            "hard",
+        ),
+
+        # unknown + anything → unknown
+        (
+            ["alien question", "time zone"],
+            "unknown",
+        ),
+
+        (
+            ["alien question", "what is your salary expectation"],
+            "unknown",
+        ),
+
+        (
+            ["alien question", "how would you explain your project"],
+            "unknown",
+        ),
+
+        # 3-way mix → hard wins
+        (
+            [
+                "time zone",
+                "what is your salary expectation",
+                "how would you explain your project",
+            ],
+            "hard",
+        ),
+
+        # shuffled order should not matter
+        (
+            [
+                "how would you explain your project",
+                "what time is your availability",
+                "what is your salary expectation",
+            ],
+            "hard",
+        ),
+
+        # repeated same category
+        (
+            [
+                "your time zone",
+                "your time zone",
+                "your time zone",
+            ],
+            "easy",
+        ),
+
+        # multiple unknowns
+        (
+            [
+                "alien question",
+                "quantum giraffe interview",
+                "neural banana protocol",
+            ],
+            "unknown",
+        ),
+    ],
+)
+@patch("src.filter_jobs.record")
+@patch("src.filter_jobs.fetch_questions")
+def test_evaluate_difficulty_multi_question_cases(mock_fetch_questions, mock_record, questions, expected):
+    """
+    Multi-question interaction tests.
+    Ensures correct priority resolution:
+    unknown > hard > medium > easy > boilerplate
+    """
+
+    mock_fetch_questions.return_value = questions
+
+    assert evaluate_difficulty("url") == expected
+

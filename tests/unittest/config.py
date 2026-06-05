@@ -6,11 +6,12 @@ MAX_JOB_COUNT_PER_QUERY      = 25
 
 # ─── FILE PATHS ──────────────────────────────────────────────────────────────
 
-FETCHED_JOBS     = "../test/data/fetched_jobs.csv"
-PROCESSED_JOBS   = "../test/data/processed_jobs.csv" 
-APPROVED_JOBS    = "../test/data/approved_jobs.csv" 
-REJECTED_JOBS    = "../test/data/rejected_jobs.csv"
-UNFILTERED_JOBS  = "../test/data/unfiltered_jobs.cvs"
+FETCHED_JOBS      = "../test/data/fetched_jobs.csv"
+PROCESSED_JOBS    = "../test/data/processed_jobs.csv" 
+APPROVED_JOBS     = "../test/data/approved_jobs.csv" 
+REJECTED_JOBS     = "../test/data/rejected_jobs.csv"
+UNFILTERED_JOBS   = "../test/data/unfiltered_jobs.cvs"
+UNKNOWN_QUESTIONS = "../test/data/unknown_questions.csv" 
 
 # ─── FILTERS ─────────────────────────────────────────────────────────────────
 
@@ -68,3 +69,18 @@ COLLABORATIVE_KEYWORDS = [
     "design", "development", "develop", "practices", "work alongside",
     "together", "teams", "cross",
 ]
+
+# ─── job application difficulty estimator marks ───────────────────────────────────────────────────────────
+
+BOILERPLATE_QUESTIONS = [
+    'first name', 'last name', 'preferred first name', 'email',
+    'phone', 'start date year', 'end date year', 'linkedin profile',
+    'website', 'country', 'school', 'degree', 'discipline', 'start date month',
+    'end date month', 'gender', 'are you hispanic/latino?', 'veteran status',
+    'disability status',
+]
+EASY_KEY_PHRASES = ["name", "full name", "refer", "referred", "hear about", "time", "country", "reside", "located", "address", "know", "family members", "related to", "related by", "relative", "employee", "employed", "have you", "right to work", "proof", "documented", "documentation", "conflict", "compete" ,"review and acknowledge", "disability", "gender", "racial", "ethnic", "veteran", "linkedin", "immigration", "authorized", "legal", "legally", "sponsorship", "location", "citizen", "greencard", "location", "city", "state", "states", "live in", "years of", "professional experience", "working experience", "degree", "graduate", "are you", "do you", "currently", "member", "privacy", "agreement", "statement", "would you", "how", "restoraunt", "pet", "hobby", "outside of work", "free time", "hobbies", "is it", "can you", "confirm"]
+MEDIUM_KEY_PHRASES = ["why", "favorite", "salary", "protocols", "rate", "which", "tools", "expectation", "compensation", "list", "rate", "indicate", "select", "what"]
+HARD_KEY_PHRASES = ["how would you", "join", "what would you do", "explain", "tell", "apply to", "references", "made you", "decide", "example", "examples", "result", "impact", "which", "used", "mission", "values", "describe", "in detail", "description"]
+ALL_KEY_PHRASES = BOILERPLATE_QUESTIONS + EASY_KEY_PHRASES + MEDIUM_KEY_PHRASES + HARD_KEY_PHRASES
+

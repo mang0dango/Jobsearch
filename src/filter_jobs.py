@@ -4,6 +4,7 @@ import time
 import requests
 import re
 from bs4 import BeautifulSoup
+import csv
 
 import config
 
@@ -88,16 +89,85 @@ def upload(path, rows):
         existing = pd.read_csv(path)
         df = pd.concat([existing, df], ignore_index=True)
         df = df.drop_duplicates(subset=["url"])
-        
-        if "skills_matched" in df.columns:
-            df = df.sort_values(by="skills_matched", ascending=False)
-        if "date_found" in df.columns:
-            df = df.sort_values(by="date_found", ascending=False) 
 
     except FileNotFoundError:
         pass
 
     df.to_csv(path, index=False)
+
+def record(unknown_questions: list[str]):
+    """ Write the questions which the code could not understand in a separate file to help adjust the text analysis for the future. """
+    
+    if unknown_questions: 
+        with open(config.UNKNOWN_QUESTIONS, 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(unknown_questions)
+
+def fetch_questions(url: str) -> list[str]:
+    """ Fetch all the job application form questions. """
+
+    questions = []
+
+    try:
+
+        res = requests.get(url, timeout=10)
+        soup = BeautifulSoup(res.text, "html.parser")
+
+        text_q_wrappers = soup.find_all("div", class_="input-wrapper") 
+        dropdown_q_wrappers = soup.find_all("div", class_="select__container")
+        wrappers = text_q_wrappers + dropdown_q_wrappers
+
+        for wrapper in wrappers:
+            label = wrapper.find("label")
+
+            if label:
+                question = label.get_text(strip=True)
+                if "*" in question: 
+                    normalized_q = question.lower().replace("*","")
+                    questions.append(normalized_q)
+        
+        return questions
+    except Exception as e:
+        print(e)
+        return []
+
+def evaluate_difficulty(url: str) -> str:
+    """ Check if the job application form has any questions that are not boilerplate questions, such as name, etc.
+    If there are more complex customized questions, then evaluate complexity of the questions and overall form based on common key words that denote the nature of the question. 
+    For questions that the companies wrote themselves instead of boilerplate questions, the wording might change while referring to the same topic. """ 
+
+    try:
+        
+        status = "unassigned"
+        unknown_questions = []
+
+        questions = fetch_questions(url)
+        custom_questions = [q for q in questions if q not in config.BOILERPLATE_QUESTIONS] 
+
+        if custom_questions:
+            for q in custom_questions:
+                if not any(phrase in q for phrase in config.ALL_KEY_PHRASES):
+                    status = "unknown"
+                    unknown_questions.append(q)
+                elif any(phrase in q for phrase in config.HARD_KEY_PHRASES):
+                    if status == "unassigned" or status == "easy" or status == "medium":
+                        status = "hard"
+                elif any(phrase in q for phrase in config.MEDIUM_KEY_PHRASES):
+                    if status == "unassigned" or status == "easy":
+                        status = "medium"
+                elif any(phrase in q for phrase in config.EASY_KEY_PHRASES):
+                    if status == "unassigned":
+                        status = "easy"
+        elif questions:
+            status = "boilerplate"
+        
+        if unknown_questions:
+            record(unknown_questions)
+
+        return status
+
+    except Exception:
+        return "unassigned"
 
 def classify(url):
     """ Classify a job as approved or rejected with metadata. """
@@ -154,6 +224,7 @@ def classify(url):
             "date_applied": "",
             "company": company,
             "url": url,
+            "questions": evaluate_difficulty(url), 
             "skills_matched": score,
             "skills_list": ",".join(skills),
             "status": "approved",
@@ -187,61 +258,75 @@ def filter_jobs():
         processed_set = set(processed["url"])
         jobs_to_process = fetched_jobs[~fetched_jobs["url"].isin(processed_set)]
         total = len(jobs_to_process)
+        
+        if total > 0:
+            print(f"Update: Starting processing {total} jobs")
 
-        print(f"Update: Starting processing {total} jobs")
+            for i, url in enumerate(jobs_to_process["url"], start=1):
+                result = classify(url)
 
-        for i, url in enumerate(jobs_to_process["url"], start=1):
-            result = classify(url)
+                rows.append(result)
+                processed_rows.append({"url": url})
 
-            rows.append(result)
-            processed_rows.append({"url": url})
+                if result["status"] == "approved":
+                    approved_count += 1
+                elif result["status"] == "rejected":
+                    rejected_count += 1
+                elif result["status"] == "unfiltered":
+                    unfiltered_count += 1
 
-            if result["status"] == "approved":
-                approved_count += 1
-            elif result["status"] == "rejected":
-                rejected_count += 1
-            elif result["status"] == "unfiltered":
-                unfiltered_count += 1
+                percent = (i / total) * 100 if total else 0
 
-            percent = (i / total) * 100 if total else 0
+                print(
+                    f"\rProcessed {i}/{total} ({percent:.2f}%) | "
+                    f"Approved: {approved_count} | Rejected: {rejected_count} | Unfiltered: {unfiltered_count}",
+                    end="",
+                    flush=True
+                )
 
-            print(
-                f"\rProcessed {i}/{total} ({percent:.2f}%) | "
-                f"Approved: {approved_count} | Rejected: {rejected_count} | Unfiltered: {unfiltered_count}",
-                end="",
-                flush=True
-            )
+                time.sleep(config.REQUEST_DELAY)
+            
+            df = pd.DataFrame(rows)
+            
+            return df, processed_rows, total
 
-            time.sleep(config.REQUEST_DELAY)
-
-    except KeyboardInterrupt:
-        print("\nUpdate: Interrupted by user (Ctrl+C)")
-
+        else:
+            print("Update: no jobs to filter, exiting now.")
+            exit()
     except Exception as e:
         print(e)
+        return None, [], 0 
 
-    finally:
-        if total:
-            df = pd.DataFrame(rows)
-            return df, processed_rows, total
-        else:
-            print("Update: No jobs to process.")
-            return pd.DataFrame(), [], 0
+
 
 def main():
-    """ Run full job filtering pipeline and upload results """
+    """ Run the job filtering pipeline, sort, and upload results. """
 
     df, processed_rows, total = filter_jobs()
 
-    unfiltered = df[df["status"] == "unfiltered"].copy().to_dict("records")
-    rejected = df[df["status"] == "rejected"].copy().to_dict("records")
-    approved = df[df["status"] == "approved"].copy().sort_values(by="skills_matched", ascending=False).to_dict("records")
+    approved_df = df[df["status"] == "approved"]
+
+    approved_df["questions"] = pd.Categorical(
+        approved_df["questions"],
+        categories=[
+            "boilerplate",
+            "easy",
+            "medium",
+            "hard",
+            "unknown",
+        ],
+        ordered=True,
+    )
+
+    unfiltered = df[df["status"] == "unfiltered"].sort_values(by="date_found", ascending=False).to_dict("records")
+    rejected = df[df["status"] == "rejected"].sort_values(by="date_found", ascending=False).to_dict("records")
+    approved = df[df["status"] == "approved"].sort_values(by=["skills_matched", "questions" ,"date_found"], ascending=[False, True, False]).to_dict("records")
 
     print("\nUpdate: Uploading results")
     upload(config.APPROVED_JOBS, approved)
     upload(config.REJECTED_JOBS, rejected)
     upload(config.UNFILTERED_JOBS, unfiltered)
     upload(config.PROCESSED_JOBS, processed_rows)
-    
+        
 if __name__ == "__main__":
     main()
